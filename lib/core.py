@@ -8,12 +8,15 @@ See the file 'LICENSE' for copying permission
 import re, requests, time, random
 from lib.logger import logger
 from xgoogle.search import GoogleSearch, SearchError
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
 
 def is_valid_url(url):
-    is_valid = re.match("^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$", url)
-    if is_valid:
+    validate = URLValidator()
+    try:
+        validate(url)
         return True
-    else:
+    except ValidationError:
         return False
 
 def get_html_from_url(url):
